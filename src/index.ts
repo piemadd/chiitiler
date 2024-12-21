@@ -1,8 +1,10 @@
 import {
     getRenderedBbox,
     getRenderedTile,
+    getRenderedFromCoords,
     GetRenderedBboxOptions,
     GetRenderedTileOptions,
+    GetRenderedFromCoordsOptions,
 } from './render/index.js';
 
 export async function getRenderedBboxBuffer(
@@ -22,5 +24,14 @@ export async function getRenderedTileBuffer(
 }
 
 export { getRenderedTile as getRenderedTileStream };
+
+export async function getRenderedFromImageBuffer(
+  options: GetRenderedFromCoordsOptions,
+): Promise<Buffer> {
+  const sharp = await getRenderedFromCoords(options);
+  return sharp.toBuffer();
+}
+
+export { getRenderedFromCoords as getRenderedFromCoordsStream };
 
 export * as ChiitilerCache from './cache/index.js';

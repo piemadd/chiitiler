@@ -172,44 +172,79 @@ async function getRenderedBbox({
     ext,
     quality,
 }: GetRenderedBboxOptions): Promise<sharp.Sharp> {
-    const style = await loadStyle(stylejson, cache);
-
     const { zoom, width, height, center } = calcRenderingParams(bbox, size);
 
-    const pixels = await render(
-        style,
-        {
-            zoom,
-            width,
-            height,
-            center,
-        },
-        cache,
-        'static',
-    );
-
-    let _sharp = sharp(pixels, {
-        raw: {
-            width,
-            height,
-            channels: 4,
-        },
+    return getRenderedFromCoords({
+      stylejson,
+      center,
+      zoom,
+      width,
+      height,
+      cache,
+      ext,
+      quality
     });
-    switch (ext) {
-        case 'png':
-            return _sharp.png();
-        case 'jpeg':
-        case 'jpg':
-            return _sharp.jpeg({ quality });
-        case 'webp':
-            return _sharp.webp({ quality, effort: 0 });
-    }
+};
+
+type GetRenderedFromCoordsOptions = {
+  stylejson: string | StyleSpecification;
+  center: [number, number];
+  zoom: number;
+  width: number;
+  height: number;
+  cache: Cache;
+  ext: SupportedFormat;
+  quality: number;
+};
+
+async function getRenderedFromCoords({
+  stylejson,
+  center,
+  zoom,
+  width,
+  height,
+  cache,
+  ext,
+  quality,
+}: GetRenderedFromCoordsOptions): Promise<sharp.Sharp> {
+  const style = await loadStyle(stylejson, cache);
+
+  const pixels = await render(
+      style,
+      {
+          zoom,
+          width,
+          height,
+          center,
+      },
+      cache,
+      'static',
+  );
+
+  let _sharp = sharp(pixels, {
+      raw: {
+          width,
+          height,
+          channels: 4,
+      },
+  });
+  switch (ext) {
+      case 'png':
+          return _sharp.png();
+      case 'jpeg':
+      case 'jpg':
+          return _sharp.jpeg({ quality });
+      case 'webp':
+          return _sharp.webp({ quality, effort: 0 });
+  }
 }
 
 export {
     getRenderedTile,
     getRenderedBbox,
+    getRenderedFromCoords,
     type GetRenderedBboxOptions,
     type GetRenderedTileOptions,
+    type GetRenderedFromCoordsOptions,
     type SupportedFormat,
 };

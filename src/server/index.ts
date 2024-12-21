@@ -11,6 +11,7 @@ import { getDebugPage, getEditorgPage } from './debug.js';
 import {
     getRenderedTile,
     getRenderedBbox,
+    getRenderedFromCoords,
     type SupportedFormat,
 } from '../render/index.js';
 
