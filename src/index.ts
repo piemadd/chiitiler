@@ -25,7 +25,7 @@ export async function getRenderedTileBuffer(
 
 export { getRenderedTile as getRenderedTileStream };
 
-export async function getRenderedFromImageBuffer(
+export async function getRenderedFromCoordsBuffer(
   options: GetRenderedFromCoordsOptions,
 ): Promise<Buffer> {
   const sharp = await getRenderedFromCoords(options);
